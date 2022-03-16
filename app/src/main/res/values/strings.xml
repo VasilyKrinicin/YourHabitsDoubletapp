@@ -1,3 +1,19 @@
 <resources>
-    <string name="app_name">YourHabitsDoubletapp</string>
+    <string name="app_name">Трекер привычек</string>
+    <string name="text_empty_list_habit">Список привычек пуст</string>
+
+    <string-array name="priority_habit">
+        <item>Низкий</item>
+        <item>Средний</item>
+        <item>Высокий</item>
+    </string-array>
+    <array name="period_habit_list">
+        <item>в час</item>
+        <item>в день</item>
+        <item>в неделю</item>
+        <item>в месяц</item>
+        <item>в квартал</item>
+        <item>в год</item>
+    </array>
+
 </resources>
