@@ -10,7 +10,7 @@
 
     <TextView
         android:id="@+id/nameHabit"
-        android:text="Название привычки"
+        android:text="@string/simple_text_name_habit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
@@ -22,19 +22,19 @@
         android:id="@+id/descriptionHabit"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Описание привычки "
+        android:text="@string/simple_text_description_habit"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/nameHabit" />
     <TextView
         android:id="@+id/typeHabit"
-        android:text="Тип привычки"
+        android:text="@string/simple_text_type_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/descriptionHabit"/>
     <TextView
         android:id="@+id/frequencyHabit"
-        android:text="Частота повторений"
+        android:text="@string/simple_textfrequancy_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toEndOf="@+id/typeHabit"
@@ -43,7 +43,7 @@
         />
     <TextView
         android:id="@+id/priorityHabit"
-        android:text="Приоритет привычки"
+        android:text="@string/simple_text_priority_habit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintStart_toStartOf="parent"

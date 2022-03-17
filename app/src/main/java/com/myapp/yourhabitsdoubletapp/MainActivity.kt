@@ -3,6 +3,7 @@ package com.myapp.yourhabitsdoubletapp
 import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.PersistableBundle
 import androidx.activity.result.ActivityResult
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
@@ -54,6 +55,7 @@ class MainActivity : AppCompatActivity() {
             this.adapter = adapterHabit
             this.layoutManager = LinearLayoutManager(context)
         }
+        binding.textViewEmptyList.isVisible = habit.isEmpty()
     }
 /* Ф-ия для определния интетнта и выбраного пользователем элемента списка Habit для редактирования
     и запуска активити редатирования*/
@@ -62,9 +64,19 @@ class MainActivity : AppCompatActivity() {
         startForResult?.launch(intent)
     }
 
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+outState.putParcelableArrayList(HABIT_STATE,habit)
+    }
 
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        super.onRestoreInstanceState(savedInstanceState)
+        habit=savedInstanceState.getParcelableArrayList<Habit>(HABIT_STATE)?: arrayListOf()
+        initList(habit)
+    }
     companion object {
         private const val KEY_ADD = 1
         private const val KEY_EDIT = 2
+        private const val HABIT_STATE = "HabitState"
     }
 }

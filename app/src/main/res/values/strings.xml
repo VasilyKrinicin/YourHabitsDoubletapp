@@ -1,19 +1,25 @@
 <resources>
     <string name="app_name">Трекер привычек</string>
     <string name="text_empty_list_habit">Список привычек пуст</string>
+    <string name="enter_new_habit_text">Введите новую привычку</string>
+    <string name="edit_new_habit_text">Отредактируйте вашу привычку</string>
 
-    <string-array name="priority_habit">
-        <item>Низкий</item>
-        <item>Средний</item>
-        <item>Высокий</item>
-    </string-array>
-    <array name="period_habit_list">
-        <item>в час</item>
-        <item>в день</item>
-        <item>в неделю</item>
-        <item>в месяц</item>
-        <item>в квартал</item>
-        <item>в год</item>
-    </array>
+    <string name="enter_name_habit_edit">Введите название привычки</string>
+    <string name="enter_description_habit_edit">Введите описание привычки</string>
+    <string name="selected_priority_spiner">Выбирите приоритет</string>
+    <string name="good_habit_type_radio_text">Хорошая привычка</string>
+    <string name="negative_habit_type_radio_text">Плохая привычка</string>
+    <string name="number_execution_text_edit">Количество выполнения привычки</string>
+    <string name="period_habit_text_edit">Период выполения привычки, например:в день</string>
+    <string name="selected_color_text">Выбраный вами цвет:</string>
+    <string name="color_hsv_text">Цвет HSV:</string>
+    <string name="color_rgb_text">Цвет RGB:</string>
+    <string name="add_button_text">Добавить привычку</string>
+    <string name="edit_button_text">Редактировать</string>
+    <string name="simple_text_name_habit">Название привычки</string>
+    <string name="simple_text_description_habit">Описание привычки</string>
+    <string name="simple_text_type_habit">Тип привычки</string>
+    <string name="simple_textfrequancy_habit">Частота повторений</string>
+    <string name="simple_text_priority_habit">Приоритет привычки</string>
 
 </resources>

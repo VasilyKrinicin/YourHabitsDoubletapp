@@ -42,8 +42,8 @@ class DialogHabitsActivity : AppCompatActivity() {
         val editHabit = intent.getParcelableExtra<Habit>(HABIT)
         if (editHabit != null) {
             editHabitFun(editHabit)
-            binding.addHabitButton.text = "Редактировать"
-            binding.helloTextView.text = "Отредактируйте вашу привычку"
+            binding.addHabitButton.text = resources.getString(R.string.edit_button_text)
+            binding.helloTextView.text = resources.getString(R.string.edit_new_habit_text)
             flag = false
         }
         setContentView(view)
