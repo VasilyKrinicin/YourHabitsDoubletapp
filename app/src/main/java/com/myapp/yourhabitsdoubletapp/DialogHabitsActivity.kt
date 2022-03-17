@@ -252,11 +252,15 @@ class DialogHabitsActivity : AppCompatActivity() {
         outState.putInt(
             COLOR, selectedColor()
         )
+        outState.putString(RGB,binding.selectedColorRGB.text.toString())
+        outState.putString(HSV,binding.selectedColorHSV.text.toString())
         super.onSaveInstanceState(outState)
     }
 
     override fun onRestoreInstanceState(savedInstanceState: Bundle) {
         binding.selectedColor.background = savedInstanceState.getInt(COLOR).toColor().toDrawable()
+        binding.selectedColorRGB.text=savedInstanceState.getString(RGB)
+        binding.selectedColorHSV.text=savedInstanceState.getString(HSV)
         super.onRestoreInstanceState(savedInstanceState)
     }
 
@@ -264,6 +268,9 @@ class DialogHabitsActivity : AppCompatActivity() {
         private const val COLOR = "color"
         private const val HABIT = "habit"
         private const val NEW = "new_habit"
+        private const val RGB = "rgb_text"
+        private const val HSV = "hsv_text"
+
 
 // Создаем Интент для передачи habit для его редактирования
         fun newIntent(context: Context, habit: Habit): Intent {
