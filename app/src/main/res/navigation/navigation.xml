@@ -17,7 +17,7 @@
     </fragment>
     <fragment
         android:id="@+id/dialogHabitFragment"
-        android:name="com.myapp.yourhabitsdoubletapp.UI.DialogHabitFragment"
+        android:name="com.myapp.yourhabitsdoubletapp.ui.DialogHabitFragment"
         android:label="DialogHabitFragment" >
         <action
             android:id="@+id/action_dialogHabitFragment_to_listFragment"
@@ -28,7 +28,7 @@
     </fragment>
     <fragment
         android:id="@+id/listFragment"
-        android:name="com.myapp.yourhabitsdoubletapp.UI.ListFragmentHabit"
+        android:name="com.myapp.yourhabitsdoubletapp.ui.ListFragmentHabit"
         android:label="ListFragment" >
         <action
             android:id="@+id/action_listFragment_to_tabPagerFragment"

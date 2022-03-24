@@ -1,4 +1,4 @@
-package com.myapp.yourhabitsdoubletapp.UI
+package com.myapp.yourhabitsdoubletapp.ui
 
 import android.os.Bundle
 import android.util.Log

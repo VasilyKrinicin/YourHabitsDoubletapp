@@ -6,7 +6,7 @@ import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.Habit
-import com.myapp.yourhabitsdoubletapp.UI.ListFragmentHabit
+import com.myapp.yourhabitsdoubletapp.ui.ListFragmentHabit
 
 
 class TabPagerAdapter(

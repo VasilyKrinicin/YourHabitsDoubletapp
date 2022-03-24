@@ -1,4 +1,4 @@
-package com.myapp.yourhabitsdoubletapp.UI
+package com.myapp.yourhabitsdoubletapp.ui
 
 import android.content.res.ColorStateList
 import android.graphics.Bitmap

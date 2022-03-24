@@ -1,20 +1,15 @@
 package com.myapp.yourhabitsdoubletapp
 
-import android.opengl.Visibility
 import android.os.Bundle
 import android.os.PersistableBundle
-import android.view.MenuItem
-import android.view.View
-import android.view.View.GONE
 import android.widget.Toast
 import androidx.appcompat.app.ActionBarDrawerToggle
 import androidx.appcompat.app.AppCompatActivity
-import androidx.constraintlayout.widget.ConstraintSet.GONE
 
 import com.google.android.material.tabs.TabLayoutMediator
 import com.myapp.yourhabitsdoubletapp.Adapters.TabPagerAdapter
 
-import com.myapp.yourhabitsdoubletapp.UI.DialogHabitFragment
+import com.myapp.yourhabitsdoubletapp.ui.DialogHabitFragment
 import com.myapp.yourhabitsdoubletapp.databinding.ActivityMainBinding
 
 import java.util.ArrayList
@@ -43,13 +38,13 @@ class MainActivity : AppCompatActivity(), EditItemInterface {
         binding.drawerLayout.addDrawerListener(toggle)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.navView.setNavigationItemSelectedListener {
-            when(it.itemId){
-                R.id.menu_item_about->{
-                    Toast.makeText(this,"Кнопка меню о прилжении",Toast.LENGTH_LONG).show()
+            when (it.itemId) {
+                R.id.menu_item_about -> {
+                    Toast.makeText(this, "Кнопка меню о прилжении", Toast.LENGTH_LONG).show()
                 }
-                R.id.menu_item_home->{
-                Toast.makeText(this,"Кнопка меню домой",Toast.LENGTH_LONG).show()
-                    }
+                R.id.menu_item_home -> {
+                    Toast.makeText(this, "Кнопка меню домой", Toast.LENGTH_LONG).show()
+                }
 
             }
             true
