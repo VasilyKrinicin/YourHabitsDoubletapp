@@ -9,11 +9,28 @@
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/drawable/gradient_shape.xml" value="0.22" />
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/drawable/ic_add.xml" value="0.2435" />
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/drawable/ic_launcher_background.xml" value="0.2435" />
-        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/activity_habit_dialog.xml" value="0.25037481259370314" />
-        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/activity_main.xml" value="0.1" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/activity_habit_dialog.xml" value="0.1" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/activity_main.xml" value="0.18" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/activity_tab.xml" value="0.2609375" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/app_bar_main.xml" value="0.13177083333333334" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/content_main.xml" value="0.10160427807486631" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragmen_main.xml" value="0.12689969604863222" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_about.xml" value="0.20625" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_habit_dialog.xml" value="0.2341485507246377" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_home.xml" value="0.13177083333333334" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_list_habit.xml" value="0.12689969604863222" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_main.xml" value="0.1" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_menu.xml" value="0.15" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_slideshow.xml" value="0.13177083333333334" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_tab.xml" value="0.12689969604863222" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/fragment_tab_pager.xml" value="0.22" />
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/item_habit.xml" value="0.32382246376811596" />
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/item_period_spiner.xml" value="0.3351449275362319" />
         <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/item_spiner.xml" value="0.2875" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/nav_header.xml" value="0.2911458333333333" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/layout/nav_header_main.xml" value="0.13072916666666667" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/menu/activity_main_drawer.xml" value="0.225" />
+        <entry key="..\:/Doubletapp/YourHabitsDoubletapp/YourHabitsDoubletapp/app/src/main/res/menu/menu.xml" value="0.25" />
       </map>
     </option>
   </component>

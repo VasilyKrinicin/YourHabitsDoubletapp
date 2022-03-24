@@ -1,4 +1,6 @@
 <resources>
+    <string name="open_menu">open</string>
+    <string name="close_menu">close</string>
     <string name="app_name">Трекер привычек</string>
     <string name="text_empty_list_habit">Список привычек пуст</string>
     <string name="enter_new_habit_text">Введите новую привычку</string>
@@ -21,5 +23,7 @@
     <string name="simple_text_type_habit">Тип привычки</string>
     <string name="simple_textfrequancy_habit">Частота повторений</string>
     <string name="simple_text_priority_habit">Приоритет привычки</string>
+    <string name="name_user_text">Name User</string>
+    <string name="text_user_exemple_com">user@exemple.com</string>
 
 </resources>

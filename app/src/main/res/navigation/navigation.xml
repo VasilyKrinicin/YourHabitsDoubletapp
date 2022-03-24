@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/navigation"
+    app:startDestination="@id/tabPagerFragment">
+
+    <fragment
+        android:id="@+id/tabPagerFragment"
+        android:name="com.myapp.yourhabitsdoubletapp.TabPagerFragment"
+        android:label="TabPagerFragment" >
+        <action
+            android:id="@+id/action_tabPagerFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_tabPagerFragment_to_dialogHabitFragment"
+            app:destination="@id/dialogHabitFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/dialogHabitFragment"
+        android:name="com.myapp.yourhabitsdoubletapp.UI.DialogHabitFragment"
+        android:label="DialogHabitFragment" >
+        <action
+            android:id="@+id/action_dialogHabitFragment_to_listFragment"
+            app:destination="@id/listFragment" />
+        <action
+            android:id="@+id/action_dialogHabitFragment_to_tabPagerFragment"
+            app:destination="@id/tabPagerFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/listFragment"
+        android:name="com.myapp.yourhabitsdoubletapp.UI.ListFragmentHabit"
+        android:label="ListFragment" >
+        <action
+            android:id="@+id/action_listFragment_to_tabPagerFragment"
+            app:destination="@id/tabPagerFragment" />
+    </fragment>
+</navigation>
