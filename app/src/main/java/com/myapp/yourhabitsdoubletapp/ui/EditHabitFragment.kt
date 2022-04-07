@@ -17,32 +17,35 @@ import androidx.core.graphics.toColor
 import androidx.core.view.isVisible
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
-import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
+import androidx.navigation.fragment.findNavController
 import com.myapp.yourhabitsdoubletapp.Data.PriorityHabit
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.EditItemInterface
 import com.myapp.yourhabitsdoubletapp.Habit
 import com.myapp.yourhabitsdoubletapp.R
-import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitDialogBinding
+import com.myapp.yourhabitsdoubletapp.ViewModel.EditHabitViewModel
+import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitEditBinding
 
-class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
-
-    private var fragmentDialogBinding: FragmentHabitDialogBinding? = null
+class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
+    private val editHabitViewModel: EditHabitViewModel by viewModels()
+    private var fragmentHabitEditBinding: FragmentHabitEditBinding? = null
     private var priorityItem = PriorityHabit.LOW
-    private var flag: Boolean = true
+    private var editHabit: Habit? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        val binding = FragmentHabitDialogBinding.bind(view)
-        fragmentDialogBinding = binding
-        val editHabit = arguments?.getParcelable<Habit>(EDIT_HABIT)
+        val binding = FragmentHabitEditBinding.bind(view)
+        fragmentHabitEditBinding = binding
+        editHabit = arguments?.getParcelable<Habit>(EDIT_HABIT)
         if (editHabit != null) {
-            editHabitFun(editHabit)
+            editHabitFun(editHabit!!)
             binding.apply {
                 addHabitButton.text = resources.getString(R.string.edit_button_text)
                 helloTextView.text = resources.getString(R.string.edit_new_habit_text)
+                selectedColor.background = editHabit!!.colorHabit.toDrawable()
+                selectedColorBtn(editHabit!!.colorHabit.toColor())
             }
-            flag = false
         } else if (savedInstanceState != null) {
             binding.apply {
                 selectedColor.background =
@@ -51,56 +54,44 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
                 selectedColorHSV.text = savedInstanceState.getString(HSV)
             }
         }
-
         initSpiner()
         initColorPickerViewGroup()
         addInstallTextWatcher()
         selectedPriority()
         binding.addHabitButton.setOnClickListener {
-            //если flag true возвращаем ResultCode 1 - созадние новго элемента списка
-            if (flag) {
-                val newHabit = newHabit()
-                (requireActivity() as EditItemInterface).newItem(newHabit)
-                dismiss()
-            }
-            //если flag false возвращаем ResultCode 2 - редактирование ранее созданого элемента списка
-            else {
-                val newHabit = newHabit()
-                newHabit.id = editHabit!!.id
-                (requireActivity() as EditItemInterface).editItem(newHabit)
-                dismiss()
-
-            }
+            val newHabit = newHabit()
+            editHabitViewModel.fieldProcess(newHabit, editHabit)
+            findNavController().popBackStack()
         }
     }
 
     //Создание новго элемента Habit из заполненых данных
     private fun newHabit(): Habit {
-        /*Назначаем id равное хэш коду активити, врят ли повторится думаю надежнее чем Random.Int
-        далее переопреелять id не будем
-        */
+        var idHabit = this.hashCode()
+        if (editHabit != null) {
+            idHabit = editHabit!!.id
+        }
         return Habit(
-            id = this.hashCode(),
-            nameHabit = fragmentDialogBinding?.editHabitNameText?.text.toString(),
-            descriptionHabit = fragmentDialogBinding?.editHabitDescriptionText?.text.toString(),
+            id = idHabit,
+            nameHabit = fragmentHabitEditBinding?.editHabitNameText?.text.toString(),
+            descriptionHabit = fragmentHabitEditBinding?.editHabitDescriptionText?.text.toString(),
             typeHabit = selectedTypeHabit(),
-            numberExecutions = fragmentDialogBinding?.editHabitNumberExecutionsText?.text.toString()
+            numberExecutions = fragmentHabitEditBinding?.editHabitNumberExecutionsText?.text.toString()
                 .toInt(),
             priorityHabit = priorityItem,
-            periodText = fragmentDialogBinding?.editHabitPeriodText?.text.toString(),
+            periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString(),
             colorHabit = selectedColor()
         )
-
     }
 
     // определяем выбранный тип для передачи в поле класса Habit
     private fun selectedTypeHabit(): TypeHabit {
-        return if (fragmentDialogBinding?.radioPositiveHabit?.isChecked == true) TypeHabit.POSITIVE else TypeHabit.NEGATIVE
+        return if (fragmentHabitEditBinding?.radioPositiveHabit?.isChecked == true) TypeHabit.POSITIVE else TypeHabit.NEGATIVE
     }
 
     // Определяем выбраный цвет и переводим в число
     private fun selectedColor(): Int {
-        return fragmentDialogBinding?.selectedColor?.background?.toBitmap(
+        return fragmentHabitEditBinding?.selectedColor?.background?.toBitmap(
             2,
             2,
             Bitmap.Config.ARGB_8888
@@ -110,8 +101,8 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
 
     //Оперделяем выбраный приоритет
     private fun selectedPriority() {
-        fragmentDialogBinding?.spinerPriority?.setOnItemClickListener { parent, _,
-                                                                        position, _ ->
+        fragmentHabitEditBinding?.spinerPriority?.setOnItemClickListener { parent, _,
+                                                                           position, _ ->
             when (parent.getItemAtPosition(position).toString()) {
                 PriorityHabit.LOW.str -> {
                     priorityItem = PriorityHabit.LOW
@@ -133,13 +124,13 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
 
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                fragmentDialogBinding?.addHabitButton?.isEnabled = fieldCheck() ?: false
+                fragmentHabitEditBinding?.addHabitButton?.isEnabled = fieldCheck() ?: false
 
             }
 
             override fun afterTextChanged(s: Editable?) {}
         }
-        fragmentDialogBinding?.apply {
+        fragmentHabitEditBinding?.apply {
             editHabitNameLayout.editText?.addTextChangedListener(textChangedListenerAdd)
             editHabitDescriptionLayout.editText?.addTextChangedListener(textChangedListenerAdd)
             editHabitNumberExecutionsLayout.editText?.addTextChangedListener(textChangedListenerAdd)
@@ -148,10 +139,21 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
         }
     }
 
+    //проверяем заолненость полей для активции кнопки
+    private fun fieldCheck(): Boolean? {
+        return fragmentHabitEditBinding?.let {
+            (it.editHabitNameLayout.editText?.length() != 0
+                    && it.editHabitDescriptionLayout.editText?.length() != 0
+                    && it.editHabitNumberExecutionsLayout.editText?.length() != 0
+                    && it.editHabitPeriodLayout.editText?.length() != 0
+                    && it.spinerPriority.text.isNotEmpty())
+        }
+    }
+
 
     //Функция запонения полей для редактирования привычки
     private fun editHabitFun(habit: Habit) {
-        fragmentDialogBinding?.apply {
+        fragmentHabitEditBinding?.apply {
             addHabitButton.isEnabled = true
             selectedColor.isVisible = true
             editHabitNameText.setText(habit.nameHabit)
@@ -178,7 +180,7 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
             R.layout.item_spiner,
             priorityList
         )
-        fragmentDialogBinding?.spinerPriority?.setAdapter(adapter)
+        fragmentHabitEditBinding?.spinerPriority?.setAdapter(adapter)
     }
 
     /* Инициализация ColorPicker, Создаем 16 кнопок, 180*180 отступ 45 устанавливаем в LinerLayout
@@ -186,7 +188,7 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
       для каждой кнопки назначаем ClickListener который передает в ImageView выбраный цвет
       * */
     private fun initColorPickerViewGroup() {
-        val layout = fragmentDialogBinding?.horizontalLayoutColorPicker
+        val layout = fragmentHabitEditBinding?.horizontalLayoutColorPicker
         val widthBtn = 180
         val heightBtn = 180
         val margin = 45
@@ -205,7 +207,7 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
         }
         val widthGradient = (param.width + param.leftMargin + param.rightMargin) * button.size
         val heightGradient = param.height + param.bottomMargin + param.topMargin
-        val bitmap = fragmentDialogBinding?.horizontalLayoutColorPicker?.background?.toBitmap(
+        val bitmap = fragmentHabitEditBinding?.horizontalLayoutColorPicker?.background?.toBitmap(
             widthGradient,
             heightGradient,
             Bitmap.Config.ARGB_8888
@@ -230,7 +232,7 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
                 }
             }
             layout?.addView(it)
-            if (position == 0 && fragmentDialogBinding?.selectedColor?.isVisible == false) {
+            if (position == 0 && fragmentHabitEditBinding?.selectedColor?.isVisible == false) {
                 if (color != null) {
                     selectedColorBtn(color)
                 }
@@ -244,7 +246,7 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
         Color.colorToHSV(color.toArgb(), colorHsv)
         val colorRgb = arrayOf(color.red(), color.green(), color.blue())
         //Устанавливаем в Image View выбраный цвет и делаем View видимой при присвоении цвета
-        fragmentDialogBinding?.apply {
+        fragmentHabitEditBinding?.apply {
             selectedColor.background = color.toDrawable()
             selectedColor.isVisible = true
             //преобразуем к чиатему виду массивы со занчением цвета и выводим в текстовые поля
@@ -261,22 +263,12 @@ class DialogHabitFragment() : DialogFragment(R.layout.fragment_habit_dialog) {
     // Преобразуем процентное соотношение RGB цвета в читаем вид
     private fun getRgbNumber(colorRgb: Float) = (((colorRgb * 100) * 255) / 100).toInt()
 
-    //проверяем заолненость полей для активции кнопки
-    private fun fieldCheck(): Boolean? {
-        return fragmentDialogBinding?.let {
-            (it.editHabitNameLayout.editText?.length() != 0
-                    && it.editHabitDescriptionLayout.editText?.length() != 0
-                    && it.editHabitNumberExecutionsLayout.editText?.length() != 0
-                    && it.editHabitPeriodLayout.editText?.length() != 0
-                    && it.spinerPriority.text.isNotEmpty())
-        }
-    }
 
     override fun onSaveInstanceState(outState: Bundle) {
         outState.putInt(
             COLOR, selectedColor()
         )
-        fragmentDialogBinding?.apply {
+        fragmentHabitEditBinding?.apply {
             outState.putString(RGB, selectedColorRGB.text.toString())
             outState.putString(HSV, selectedColorHSV.text.toString())
         }

@@ -4,12 +4,12 @@
     tools:showIn="navigation_view">
 <item
     android:id="@+id/menu_item_about"
-    android:title="About"
+    android:title="@string/menu_about"
     android:icon="@drawable/ic_baseline_format_color_text_24"/>
 
     <item
         android:id="@+id/menu_item_home"
-        android:title="Home page"
+        android:title="@string/menu_home_page"
         android:icon="@drawable/ic_baseline_home_24"/>
 
 </menu>

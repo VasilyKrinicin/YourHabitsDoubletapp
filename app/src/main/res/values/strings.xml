@@ -25,5 +25,16 @@
     <string name="simple_text_priority_habit">Приоритет привычки</string>
     <string name="name_user_text">Name User</string>
     <string name="text_user_exemple_com">user@exemple.com</string>
+    <string name="text_about_app">Экран о приложении</string>
+    <string name="text_sort_and_filter">Сортировака и фильтрация</string>
+    <string name="text_sort_by_name">Сортировка по названию привычки</string>
+    <string name="text_choose_type_sort">Выбирите тип сортировки</string>
+    <string name="text_filter_by_name">Фильтр по названию</string>
+    <string name="text_enter_name_habit">Начните вводить название привычки</string>
+    <string name="menu_home_page">Home page</string>
+    <string name="menu_about">About</string>
+    <string name="text_name_fragment_habit_edit">Редактирование/Добовление привычки</string>
+    <string name="text_name_about_fragment">О приложении</string>
+
 
 </resources>

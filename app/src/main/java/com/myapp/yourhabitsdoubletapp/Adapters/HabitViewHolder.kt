@@ -10,14 +10,9 @@ import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
 class HabitViewHolder(
     view: ItemHabitBinding,
-    onItemClick: ((Int) -> Unit)?
+    private val onItemClick: ((Habit, Int) -> Unit)?
 ) : RecyclerView.ViewHolder(view.root) {
 
-    init {
-        view.root.setOnClickListener {
-            onItemClick?.invoke(absoluteAdapterPosition)
-        }
-    }
 
     private val itemHabitLayout = view.itemHabit
     private val nameHabitText = view.nameHabit
@@ -40,7 +35,8 @@ class HabitViewHolder(
         priorityHabitText.text = habit.priorityHabit.str
         frequencyHabitText.text = habit.numberExecutions.toString() + " " + habit.periodText
         itemHabitLayout.background = habit.colorHabit.toColor().toDrawable()
-
-
+        itemHabitLayout.setOnClickListener {
+            onItemClick?.invoke(habit, absoluteAdapterPosition)
+        }
     }
 }

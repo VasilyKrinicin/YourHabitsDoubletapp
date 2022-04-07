@@ -6,7 +6,7 @@ import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.myapp.yourhabitsdoubletapp.Habit
 import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
-class HabitDelegateAdapter(private val onItemClick: (position: Int) -> Unit) :
+class HabitDelegateAdapter(private val onItemClick: (habit: Habit, position: Int) -> Unit) :
     AbsListItemAdapterDelegate<Habit, Habit, HabitViewHolder>() {
 
 
@@ -19,7 +19,6 @@ class HabitDelegateAdapter(private val onItemClick: (position: Int) -> Unit) :
             ItemHabitBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return HabitViewHolder(itemBinding, onItemClick)
     }
-
 
     override fun onBindViewHolder(
         item: Habit,
