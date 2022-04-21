@@ -26,9 +26,9 @@ object HabitRepository {
             instance.habitDao().getAllItems()
         }else
             when (sortType){
-                SortType.ZA->{
-                    instance.habitDao().getSortFilterHabitASC(typeHabit.str,text?:"")}
                 SortType.AZ->{
+                    instance.habitDao().getSortFilterHabitASC(typeHabit.str,text?:"")}
+                SortType.ZA->{
                     instance.habitDao().getSortFilterHabitDESC(typeHabit.str,text?:"")}
                 else -> {instance.habitDao().getFilterHabit(typeHabit.str,text?:"")}}
        }

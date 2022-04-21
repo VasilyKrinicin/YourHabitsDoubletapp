@@ -33,7 +33,6 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         super.onResume()
         val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
         habitListViewModel.setHabitTypeFilter(typeHabit)
-
     }
 
     //Инициализируем адаптер списка Habit
