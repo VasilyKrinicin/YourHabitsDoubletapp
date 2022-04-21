@@ -1,7 +1,8 @@
 package com.myapp.yourhabitsdoubletapp.ViewModel
 
 import androidx.lifecycle.ViewModel
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
+import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 
 class EditHabitViewModel : ViewModel() {
 

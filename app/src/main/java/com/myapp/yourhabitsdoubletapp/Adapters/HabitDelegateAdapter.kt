@@ -3,7 +3,7 @@ package com.myapp.yourhabitsdoubletapp.Adapters
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
 class HabitDelegateAdapter(private val onItemClick: (habit: Habit, position: Int) -> Unit) :

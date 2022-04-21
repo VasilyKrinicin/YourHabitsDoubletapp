@@ -3,7 +3,7 @@ package com.myapp.yourhabitsdoubletapp.Adapters
 
 import androidx.recyclerview.widget.DiffUtil
 import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
 
 class AdapterHabit(
     onItemClick: (habit: Habit, position: Int) -> Unit

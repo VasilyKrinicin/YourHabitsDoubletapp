@@ -22,9 +22,10 @@ import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import com.myapp.yourhabitsdoubletapp.Data.PriorityHabit
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.R
 import com.myapp.yourhabitsdoubletapp.ViewModel.EditHabitViewModel
+import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitEditBinding
 
 class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
@@ -37,14 +38,18 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHabitEditBinding.bind(view)
         fragmentHabitEditBinding = binding
-        editHabit = arguments?.getParcelable<Habit>(EDIT_HABIT)
-        if (editHabit != null) {
-            editHabitFun(editHabit!!)
-            binding.apply {
-                addHabitButton.text = resources.getString(R.string.edit_button_text)
-                helloTextView.text = resources.getString(R.string.edit_new_habit_text)
-                selectedColor.background = editHabit!!.colorHabit.toDrawable()
-                selectedColorBtn(editHabit!!.colorHabit.toColor())
+        val idHabit = arguments?.getLong(EDIT_HABIT)
+
+        if (idHabit != null) {
+            editHabit = HabitRepository.getHabitById(idHabit)
+            editHabit?.let {
+                editHabitFun(it)
+                binding.apply {
+                    addHabitButton.text = resources.getString(R.string.edit_button_text)
+                    helloTextView.text = resources.getString(R.string.edit_new_habit_text)
+                    selectedColor.background = it.colorHabit.toDrawable()
+                    selectedColorBtn(it.colorHabit.toColor())
+                }
             }
         } else if (savedInstanceState != null) {
             binding.apply {
@@ -67,7 +72,7 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
 
     //Создание новго элемента Habit из заполненых данных
     private fun newHabit(): Habit {
-        var idHabit = this.hashCode()
+        var idHabit: Long = 0
         if (editHabit != null) {
             idHabit = editHabit!!.id
         }

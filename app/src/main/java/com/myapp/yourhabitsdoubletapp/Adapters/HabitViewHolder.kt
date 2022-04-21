@@ -5,7 +5,7 @@ import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.RecyclerView
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
 class HabitViewHolder(

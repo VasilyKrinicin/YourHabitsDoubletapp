@@ -8,14 +8,12 @@ import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.myapp.yourhabitsdoubletapp.Data.SortType
-import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.R
 import com.myapp.yourhabitsdoubletapp.ViewModel.HabitListViewModel
-import com.myapp.yourhabitsdoubletapp.ViewModel.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentBottomSheetBinding
 
 class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
-    private val listHabitRepository = HabitRepository
+
     private var fragmentBottomSheetBinding: FragmentBottomSheetBinding? = null
     private val habitListViewModel: HabitListViewModel by activityViewModels()
 
@@ -26,11 +24,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
         initSpiner()
         filterList()
         binding.spinerSorted.setOnItemClickListener { _, _, _, _ ->
-            habitListViewModel.sortedAndFiltered(
-                listHabitRepository.getHabitList(),
-                getSortedType(),
-                binding.filterNameText.text.toString()
-            )
+            habitListViewModel.putSortType(getSortedType())
         }
     }
 
@@ -44,11 +38,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                habitListViewModel.sortedAndFiltered(
-                    listHabitRepository.getHabitList(),
-                    getSortedType(),
-                    s?.toString()
-                )
+                habitListViewModel.setTextFilter(s.toString())
             }
         }
         fragmentBottomSheetBinding?.filterNameLayout?.editText?.addTextChangedListener(

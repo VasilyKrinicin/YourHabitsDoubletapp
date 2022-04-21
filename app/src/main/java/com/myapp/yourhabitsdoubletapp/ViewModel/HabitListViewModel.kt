@@ -1,55 +1,64 @@
 package com.myapp.yourhabitsdoubletapp.ViewModel
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
+
+import androidx.lifecycle.*
 import com.myapp.yourhabitsdoubletapp.Data.SortType
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.Habit
+import com.myapp.yourhabitsdoubletapp.database.Habit
+import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 
 class HabitListViewModel : ViewModel() {
-    private val habitStockLiveData = MutableLiveData<List<Habit>>()
-    private val habitPositiveLiveData = MutableLiveData<List<Habit>>()
-    private val habitNegativeLiveData = MutableLiveData<List<Habit>>()
-    private val listHabitRepository = HabitRepository
 
-    init {
-        habitStockLiveData.value = listHabitRepository.getHabitList()
+    private var habitSortType = MutableLiveData<SortType>()
+    private var habitTextFilter = MutableLiveData<String>()
+    private var habitTypeFilter = MutableLiveData<TypeHabit>()
+
+    private var habitMutableLiveData = MutableLiveData<List<Habit>>()
+
+    var habitLiveData: LiveData<List<Habit>> = Transformations.switchMap(habitMutableLiveData) {
+        HabitRepository.getSortFilterListHabit(getTypeHabit(), getSortType(), getTextFilter())
     }
 
-    fun divisionIntoTypes(typeHabit: TypeHabit): LiveData<List<Habit>> {
-        return when (typeHabit) {
-            TypeHabit.NEGATIVE -> {
-                habitNegativeLiveData.postValue(
-                    habitStockLiveData.value
-                        ?.filter { it.typeHabit == TypeHabit.NEGATIVE })
-                habitNegativeLiveData
-            }
-            TypeHabit.POSITIVE -> {
-                habitPositiveLiveData.postValue(
-                    habitStockLiveData.value
-                        ?.filter { it.typeHabit == TypeHabit.POSITIVE })
-                habitPositiveLiveData
-            }
-        }
+    fun getHabitById(id: Long) = HabitRepository.getHabitById(id)
+
+    fun getSort() {
+        habitMutableLiveData.postValue(
+            HabitRepository.getSortFilterListHabit(
+                getTypeHabit(),
+                getSortType(),
+                getTextFilter()
+            ).value
+        )
+
     }
 
-    fun sortedAndFiltered(habitList: List<Habit>, sortType: SortType, text: String?) {
-        habitStockLiveData.value = listHabitRepository.filterAndSort(habitList, sortType, text)
-        updateSortFilter(habitStockLiveData.value!!)
+    private fun getTypeHabit(): TypeHabit? {
+        return habitTypeFilter.value
     }
 
-    private fun updateSortFilter(habitList: List<Habit>) {
-        val mutableListHabitPositive = mutableListOf<Habit>()
-        val mutableListHabitNegative = mutableListOf<Habit>()
-        habitList.forEach {
-            if (it.typeHabit == TypeHabit.NEGATIVE) {
-                mutableListHabitNegative.add(it)
-            } else {
-                mutableListHabitPositive.add(it)
-            }
-        }
-        habitNegativeLiveData.postValue(mutableListHabitNegative)
-        habitPositiveLiveData.postValue(mutableListHabitPositive)
+
+    private fun getSortType(): SortType? {
+        return habitSortType.value
     }
+
+    fun putSortType(sortType: SortType) {
+        habitSortType.value = sortType
+    }
+
+    private fun getTextFilter(): String? {
+        return habitTextFilter.value
+    }
+
+    fun setTextFilter(text: String) {
+        habitTextFilter.value = text
+    }
+
+    fun setHabitTypeFilter(typeHabit: TypeHabit) {
+        habitTypeFilter.value = typeHabit
+    }
+
+    fun getHabitSortType(): LiveData<SortType> = habitSortType
+    fun getHabitTextFilter(): LiveData<String> = habitTextFilter
+    fun getHabitTypeFilter(): LiveData<TypeHabit> = habitTypeFilter
 }
+

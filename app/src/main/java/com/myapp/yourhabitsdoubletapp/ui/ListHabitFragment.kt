@@ -10,6 +10,7 @@ import com.myapp.yourhabitsdoubletapp.*
 import com.myapp.yourhabitsdoubletapp.Adapters.AdapterHabit
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.ViewModel.HabitListViewModel
+import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentListHabitBinding
 
 class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
@@ -23,15 +24,23 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         val binding = FragmentListHabitBinding.bind(view)
         fragmentMainBinding = binding
         val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
-        observeViewModelState(typeHabit)
+        habitListViewModel.setHabitTypeFilter(typeHabit)
+        observeViewModelState()
         initList()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
+        habitListViewModel.setHabitTypeFilter(typeHabit)
+
     }
 
     //Инициализируем адаптер списка Habit
     private fun initList() {
         adapterHabit =
-            AdapterHabit() { habit, position ->
-                modifyHabit(habitListViewModel.divisionIntoTypes(habit.typeHabit).value!![position])
+            AdapterHabit() { habit, _ ->
+                modifyHabit(habitListViewModel.getHabitById(habit.id))
             }
         fragmentMainBinding?.apply {
             with(habitList) {
@@ -43,13 +52,27 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
 
     private fun modifyHabit(habit: Habit) {
         val bundle = Bundle()
-        bundle.putParcelable(EDIT_HABIT, habit)
+        bundle.putLong(EDIT_HABIT, habit.id)
         findNavController().navigate(R.id.dialogHabitFragment, bundle)
     }
 
-    private fun observeViewModelState(typeHabit: TypeHabit) {
-        habitListViewModel.divisionIntoTypes(typeHabit)
-            .observe(viewLifecycleOwner) { newHabit -> adapterHabit?.items = newHabit }
+    private fun observeViewModelState() {
+        habitListViewModel.habitLiveData
+            .observe(viewLifecycleOwner) {
+                adapterHabit?.items = it
+            }
+        habitListViewModel.getHabitSortType().observe(viewLifecycleOwner)
+        {
+            habitListViewModel.getSort()
+        }
+        habitListViewModel.getHabitTypeFilter().observe(viewLifecycleOwner) {
+            habitListViewModel.getSort()
+        }
+        habitListViewModel.getHabitTextFilter().observe(viewLifecycleOwner) {
+            habitListViewModel.getSort()
+        }
+
+
     }
 
     companion object {
