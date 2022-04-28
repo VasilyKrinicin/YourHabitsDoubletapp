@@ -5,10 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.room.Room
 import com.myapp.yourhabitsdoubletapp.Data.SortType
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.flow.Flow
 
 object HabitRepository {
-    lateinit var instance: HabitDataBase
-        private set
+    private lateinit var instance: HabitDataBase
 
     fun getDatabase(context: Context): HabitDataBase {
         instance = Room.databaseBuilder(
@@ -16,32 +17,42 @@ object HabitRepository {
             HabitDataBase::class.java,
             HabitDataBase.DB_NAME
         )
-            .allowMainThreadQueries()
             .build()
         return instance
     }
 
-    fun getSortFilterListHabit(typeHabit:TypeHabit?, sortType: SortType?, text:String?):LiveData<List<Habit>>{
-        return if (typeHabit==null){
-            instance.habitDao().getAllItems()
-        }else
-            when (sortType){
-                SortType.AZ->{
-                    instance.habitDao().getSortFilterHabitASC(typeHabit.str,text?:"")}
-                SortType.ZA->{
-                    instance.habitDao().getSortFilterHabitDESC(typeHabit.str,text?:"")}
-                else -> {instance.habitDao().getFilterHabit(typeHabit.str,text?:"")}}
-       }
+    fun getAll(): LiveData<List<Habit>> = instance.habitDao().getAllItems()
 
-    fun getHabitById(id: Long): Habit {
+    fun getSortFilterListHabit(
+        typeHabit: TypeHabit?,
+        sortType: SortType?,
+        text: String?
+    ): LiveData<List<Habit>> {
+        return if (typeHabit == null) {
+            instance.habitDao().getAllItems()
+        } else
+            when (sortType) {
+                SortType.AZ -> {
+                    instance.habitDao().getSortFilterHabitASC(typeHabit.str, text ?: "")
+                }
+                SortType.ZA -> {
+                    instance.habitDao().getSortFilterHabitDESC(typeHabit.str, text ?: "")
+                }
+                else -> {
+                    instance.habitDao().getFilterHabit(typeHabit.str, text ?: "")
+                }
+            }
+    }
+
+    suspend fun getHabitById(id: Long): Habit {
         return instance.habitDao().getHabitById(id)
     }
 
-    fun addHabit(habit: Habit) {
+    suspend fun addHabit(habit: Habit) {
         instance.habitDao().insertHabit(habit)
     }
 
-    fun editHabitList(newHabit: Habit) {
+    suspend fun editHabitList(newHabit: Habit) {
         instance.habitDao().updateHabit(newHabit)
     }
 }

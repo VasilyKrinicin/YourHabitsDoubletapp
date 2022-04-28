@@ -8,11 +8,14 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.ActivityMainBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.SupervisorJob
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         HabitRepository.getDatabase(this)
@@ -35,10 +38,8 @@ class MainActivity : AppCompatActivity() {
                 R.id.menu_item_home -> {
                     navController.navigate(R.id.viewPagerFragment)
                 }
-
             }
             true
         }
-
     }
 }

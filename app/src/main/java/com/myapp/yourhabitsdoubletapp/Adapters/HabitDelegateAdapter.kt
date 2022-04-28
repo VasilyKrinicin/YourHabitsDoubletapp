@@ -6,7 +6,7 @@ import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
-class HabitDelegateAdapter(private val onItemClick: (habit: Habit, position: Int) -> Unit) :
+class HabitDelegateAdapter(private val onItemClick: (habit: Habit) -> Unit) :
     AbsListItemAdapterDelegate<Habit, Habit, HabitViewHolder>() {
 
 

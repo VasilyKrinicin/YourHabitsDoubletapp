@@ -1,4 +1,4 @@
-package com.myapp.yourhabitsdoubletapp.ui
+package com.myapp.yourhabitsdoubletapp.ui.EditHabitFragment
 
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
@@ -20,15 +20,15 @@ import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.navArgs
 import com.myapp.yourhabitsdoubletapp.Data.PriorityHabit
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.R
-import com.myapp.yourhabitsdoubletapp.ViewModel.EditHabitViewModel
-import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitEditBinding
 
 class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
+    private val args: EditHabitFragmentArgs by navArgs()
     private val editHabitViewModel: EditHabitViewModel by viewModels()
     private var fragmentHabitEditBinding: FragmentHabitEditBinding? = null
     private var priorityItem = PriorityHabit.LOW
@@ -38,18 +38,12 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHabitEditBinding.bind(view)
         fragmentHabitEditBinding = binding
-        val idHabit = arguments?.getLong(EDIT_HABIT)
-
-        if (idHabit != null) {
-            editHabit = HabitRepository.getHabitById(idHabit)
-            editHabit?.let {
-                editHabitFun(it)
-                binding.apply {
-                    addHabitButton.text = resources.getString(R.string.edit_button_text)
-                    helloTextView.text = resources.getString(R.string.edit_new_habit_text)
-                    selectedColor.background = it.colorHabit.toDrawable()
-                    selectedColorBtn(it.colorHabit.toColor())
-                }
+        bindViewModel()
+        if (args.id != 0L) {
+            editHabitViewModel.init(args.id)
+            binding.apply {
+                addHabitButton.text = resources.getString(R.string.edit_button_text)
+                helloTextView.text = resources.getString(R.string.edit_new_habit_text)
             }
         } else if (savedInstanceState != null) {
             binding.apply {
@@ -63,30 +57,29 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
         initColorPickerViewGroup()
         addInstallTextWatcher()
         selectedPriority()
-        binding.addHabitButton.setOnClickListener {
-            val newHabit = newHabit()
-            editHabitViewModel.fieldProcess(newHabit, editHabit)
-            findNavController().popBackStack()
-        }
+    }
+
+    private fun bindViewModel() {
+        fragmentHabitEditBinding?.addHabitButton?.setOnClickListener { newHabit() }
+        editHabitViewModel.getHabitLiveData.observe(viewLifecycleOwner) { editHabitFun(it) }
     }
 
     //Создание новго элемента Habit из заполненых данных
-    private fun newHabit(): Habit {
-        var idHabit: Long = 0
-        if (editHabit != null) {
-            idHabit = editHabit!!.id
-        }
-        return Habit(
-            id = idHabit,
-            nameHabit = fragmentHabitEditBinding?.editHabitNameText?.text.toString(),
-            descriptionHabit = fragmentHabitEditBinding?.editHabitDescriptionText?.text.toString(),
-            typeHabit = selectedTypeHabit(),
-            numberExecutions = fragmentHabitEditBinding?.editHabitNumberExecutionsText?.text.toString()
-                .toInt(),
-            priorityHabit = priorityItem,
-            periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString(),
-            colorHabit = selectedColor()
+    private fun newHabit() {
+        editHabitViewModel.fieldProcess(
+            Habit(
+                id = args.id,
+                nameHabit = fragmentHabitEditBinding?.editHabitNameText?.text.toString(),
+                descriptionHabit = fragmentHabitEditBinding?.editHabitDescriptionText?.text.toString(),
+                typeHabit = selectedTypeHabit(),
+                numberExecutions = fragmentHabitEditBinding?.editHabitNumberExecutionsText?.text.toString()
+                    .toInt(),
+                priorityHabit = priorityItem,
+                periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString(),
+                colorHabit = selectedColor()
+            )
         )
+        findNavController().popBackStack()
     }
 
     // определяем выбранный тип для передачи в поле класса Habit

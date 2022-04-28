@@ -18,11 +18,9 @@ class ViewPagerFragment : Fragment(R.layout.fragment_view_pager) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentViewPagerBinding.bind(view)
         fragmentViewPagerBinding = binding
-
         initViewPager()
-
         binding.addFab.setOnClickListener {
-            findNavController().navigate(R.id.dialogHabitFragment)
+            findNavController().navigate(R.id.editHabitFragment)
         }
     }
 

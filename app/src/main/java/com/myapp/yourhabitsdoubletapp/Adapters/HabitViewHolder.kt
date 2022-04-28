@@ -10,7 +10,7 @@ import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
 class HabitViewHolder(
     view: ItemHabitBinding,
-    private val onItemClick: ((Habit, Int) -> Unit)?
+    private val onItemClick: ((Habit) -> Unit)?
 ) : RecyclerView.ViewHolder(view.root) {
 
 
@@ -36,7 +36,7 @@ class HabitViewHolder(
         frequencyHabitText.text = habit.numberExecutions.toString() + " " + habit.periodText
         itemHabitLayout.background = habit.colorHabit.toColor().toDrawable()
         itemHabitLayout.setOnClickListener {
-            onItemClick?.invoke(habit, absoluteAdapterPosition)
+            onItemClick?.invoke(habit)
         }
     }
 }

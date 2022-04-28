@@ -6,7 +6,7 @@ import com.hannesdorfmann.adapterdelegates4.AsyncListDifferDelegationAdapter
 import com.myapp.yourhabitsdoubletapp.database.Habit
 
 class AdapterHabit(
-    onItemClick: (habit: Habit, position: Int) -> Unit
+    onItemClick: (habit: Habit) -> Unit
 ) : AsyncListDifferDelegationAdapter<Habit>(HabitDiffutilCallBack()) {
     init {
         delegatesManager.addDelegate(HabitDelegateAdapter(onItemClick))

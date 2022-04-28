@@ -1,25 +1,31 @@
-package com.myapp.yourhabitsdoubletapp.ViewModel
+package com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen
 
 
-import androidx.lifecycle.*
+
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.myapp.yourhabitsdoubletapp.Data.SortType
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 
-class HabitListViewModel : ViewModel() {
+class ListHabitViewModel() : ViewModel() {
 
     private var habitSortType = MutableLiveData<SortType>()
     private var habitTextFilter = MutableLiveData<String>()
     private var habitTypeFilter = MutableLiveData<TypeHabit>()
+   var habitMutableLiveData = MutableLiveData<List<Habit>>()
 
-    private var habitMutableLiveData = MutableLiveData<List<Habit>>()
-
-    var habitLiveData: LiveData<List<Habit>> = Transformations.switchMap(habitMutableLiveData) {
-        HabitRepository.getSortFilterListHabit(getTypeHabit(), getSortType(), getTextFilter())
+    val habitLiveData: LiveData<List<Habit>> = Transformations.switchMap(habitMutableLiveData) {
+        HabitRepository.getSortFilterListHabit(
+            getTypeHabit(),
+            getSortType(),
+            getTextFilter()
+        )
     }
 
-    fun getHabitById(id: Long) = HabitRepository.getHabitById(id)
 
     fun getSort() {
         habitMutableLiveData.postValue(
@@ -29,24 +35,15 @@ class HabitListViewModel : ViewModel() {
                 getTextFilter()
             ).value
         )
-
     }
+    private fun getTypeHabit(): TypeHabit? = habitTypeFilter.value
 
-    private fun getTypeHabit(): TypeHabit? {
-        return habitTypeFilter.value
-    }
+    private fun getSortType(): SortType? = habitSortType.value
 
-
-    private fun getSortType(): SortType? {
-        return habitSortType.value
-    }
+    private fun getTextFilter(): String? = habitTextFilter.value
 
     fun putSortType(sortType: SortType) {
         habitSortType.value = sortType
-    }
-
-    private fun getTextFilter(): String? {
-        return habitTextFilter.value
     }
 
     fun setTextFilter(text: String) {

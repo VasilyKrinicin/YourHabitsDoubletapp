@@ -9,13 +9,13 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
 import com.myapp.yourhabitsdoubletapp.Data.SortType
 import com.myapp.yourhabitsdoubletapp.R
-import com.myapp.yourhabitsdoubletapp.ViewModel.HabitListViewModel
+import com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen.ListHabitViewModel
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentBottomSheetBinding
 
 class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
 
     private var fragmentBottomSheetBinding: FragmentBottomSheetBinding? = null
-    private val habitListViewModel: HabitListViewModel by activityViewModels()
+    private val listHabitViewModel: ListHabitViewModel by activityViewModels()
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -24,7 +24,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
         initSpiner()
         filterList()
         binding.spinerSorted.setOnItemClickListener { _, _, _, _ ->
-            habitListViewModel.putSortType(getSortedType())
+            listHabitViewModel.putSortType(getSortedType())
         }
     }
 
@@ -38,7 +38,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                habitListViewModel.setTextFilter(s.toString())
+                listHabitViewModel.setTextFilter(s.toString())
             }
         }
         fragmentBottomSheetBinding?.filterNameLayout?.editText?.addTextChangedListener(
@@ -52,7 +52,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
     }
 
     private fun initSpiner() {
-        val sortList = arrayListOf<String>(
+        val sortList = arrayListOf(
             SortType.AZ.str, SortType.ZA.str, SortType.NONE.str
         )
 
@@ -62,10 +62,9 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
             sortList
         )
         fragmentBottomSheetBinding?.spinerSorted?.setAdapter(adapter)
-
     }
 
-    fun getSortedType(): SortType {
+    private fun getSortedType(): SortType {
         var sortType = SortType.NONE
 
         when (fragmentBottomSheetBinding?.spinerSorted?.text.toString()) {

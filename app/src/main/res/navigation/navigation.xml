@@ -10,18 +10,31 @@
         tools:layout="@layout/fragment_about"
         android:label="@string/text_name_about_fragment" />
     <fragment
-        android:id="@+id/dialogHabitFragment"
-        android:name="com.myapp.yourhabitsdoubletapp.ui.EditHabitFragment"
+        android:id="@+id/editHabitFragment"
+        android:name="com.myapp.yourhabitsdoubletapp.ui.EditHabitFragment.EditHabitFragment"
         tools:layout="@layout/fragment_habit_edit"
         android:label="@string/text_name_fragment_habit_edit" >
+
+        <argument
+            android:name="id"
+            app:argType="long"
+            android:defaultValue="0L" />
     </fragment>
     <fragment
         android:id="@+id/viewPagerFragment"
         android:name="com.myapp.yourhabitsdoubletapp.ui.ViewPagerFragment"
         tools:layout="@layout/fragment_view_pager"
-        android:label="@string/app_name" />
+        android:label="@string/app_name" >
+        <action
+            android:id="@+id/action_viewPagerFragment_to_editHabitFragment"
+            app:destination="@id/editHabitFragment" />
+    </fragment>
     <fragment
         android:id="@+id/listFragmentHabit"
-        android:name="com.myapp.yourhabitsdoubletapp.ui.ListHabitFragment"
-        android:label="ListFragmentHabit" />
+        android:name="com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen.ListHabitFragment"
+        android:label="ListFragmentHabit" >
+        <action
+            android:id="@+id/action_listFragmentHabit_to_editHabitFragment"
+            app:destination="@id/editHabitFragment" />
+    </fragment>
 </navigation>
