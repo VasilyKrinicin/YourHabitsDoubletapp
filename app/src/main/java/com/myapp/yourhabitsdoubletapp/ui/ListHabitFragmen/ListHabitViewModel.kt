@@ -1,7 +1,6 @@
 package com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen
 
 
-
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
@@ -16,7 +15,7 @@ class ListHabitViewModel() : ViewModel() {
     private var habitSortType = MutableLiveData<SortType>()
     private var habitTextFilter = MutableLiveData<String>()
     private var habitTypeFilter = MutableLiveData<TypeHabit>()
-   var habitMutableLiveData = MutableLiveData<List<Habit>>()
+    var habitMutableLiveData = MutableLiveData<List<Habit>>()
 
     val habitLiveData: LiveData<List<Habit>> = Transformations.switchMap(habitMutableLiveData) {
         HabitRepository.getSortFilterListHabit(
@@ -25,7 +24,6 @@ class ListHabitViewModel() : ViewModel() {
             getTextFilter()
         )
     }
-
 
     fun getSort() {
         habitMutableLiveData.postValue(
@@ -36,6 +34,7 @@ class ListHabitViewModel() : ViewModel() {
             ).value
         )
     }
+
     private fun getTypeHabit(): TypeHabit? = habitTypeFilter.value
 
     private fun getSortType(): SortType? = habitSortType.value
@@ -58,4 +57,5 @@ class ListHabitViewModel() : ViewModel() {
     fun getHabitTextFilter(): LiveData<String> = habitTextFilter
     fun getHabitTypeFilter(): LiveData<TypeHabit> = habitTypeFilter
 }
+
 

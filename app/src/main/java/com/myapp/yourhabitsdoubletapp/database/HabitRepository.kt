@@ -2,13 +2,20 @@ package com.myapp.yourhabitsdoubletapp.database
 
 import android.content.Context
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.room.Room
 import com.myapp.yourhabitsdoubletapp.Data.SortType
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.*
+import kotlin.coroutines.CoroutineContext
 
-object HabitRepository {
+object HabitRepository : CoroutineScope {
+    private val job = SupervisorJob()
+
+    override val coroutineContext: CoroutineContext
+        get() = Dispatchers.Main + job + CoroutineExceptionHandler { _, e -> throw e }
+
+
     private lateinit var instance: HabitDataBase
 
     fun getDatabase(context: Context): HabitDataBase {
@@ -21,7 +28,8 @@ object HabitRepository {
         return instance
     }
 
-    fun getAll(): LiveData<List<Habit>> = instance.habitDao().getAllItems()
+
+    fun getAll(): List<Habit> = instance.habitDao().getAllItems()
 
     fun getSortFilterListHabit(
         typeHabit: TypeHabit?,
@@ -29,7 +37,7 @@ object HabitRepository {
         text: String?
     ): LiveData<List<Habit>> {
         return if (typeHabit == null) {
-            instance.habitDao().getAllItems()
+            instance.habitDao().getFilterHabit(TypeHabit.POSITIVE.str, text ?: "")
         } else
             when (sortType) {
                 SortType.AZ -> {
@@ -44,15 +52,25 @@ object HabitRepository {
             }
     }
 
-    suspend fun getHabitById(id: Long): Habit {
-        return instance.habitDao().getHabitById(id)
+    suspend fun getHabitByUID(uid: String): Habit = coroutineScope {
+        withContext(Dispatchers.IO) {
+            instance.habitDao().getHabitByUID(uid)
+        }
     }
 
-    suspend fun addHabit(habit: Habit) {
+    suspend fun getHabitById(id: Long): Habit = coroutineScope {
+        withContext(Dispatchers.IO) {
+            instance.habitDao().getHabitById(id)
+        }
+    }
+
+    fun addHabit(habit: Habit) = launch(Dispatchers.IO) {
         instance.habitDao().insertHabit(habit)
     }
 
-    suspend fun editHabitList(newHabit: Habit) {
+    suspend fun editHabit(newHabit: Habit) = launch(Dispatchers.IO) {
         instance.habitDao().updateHabit(newHabit)
     }
+
+
 }

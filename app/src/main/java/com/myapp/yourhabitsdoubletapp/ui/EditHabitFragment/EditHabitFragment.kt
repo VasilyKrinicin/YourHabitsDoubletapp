@@ -4,7 +4,9 @@ import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
+import android.icu.util.Calendar
 import android.os.Bundle
+import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -25,7 +27,11 @@ import com.myapp.yourhabitsdoubletapp.Data.PriorityHabit
 import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
 import com.myapp.yourhabitsdoubletapp.database.Habit
 import com.myapp.yourhabitsdoubletapp.R
+import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitEditBinding
+import org.threeten.bp.Instant
+import org.threeten.bp.LocalDateTime
+import java.util.*
 
 class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
     private val args: EditHabitFragmentArgs by navArgs()
@@ -33,6 +39,8 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
     private var fragmentHabitEditBinding: FragmentHabitEditBinding? = null
     private var priorityItem = PriorityHabit.LOW
     private var editHabit: Habit? = null
+    private var selectedInstant: Instant? = null
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -69,6 +77,7 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
         editHabitViewModel.fieldProcess(
             Habit(
                 id = args.id,
+                uid = args.uid,
                 nameHabit = fragmentHabitEditBinding?.editHabitNameText?.text.toString(),
                 descriptionHabit = fragmentHabitEditBinding?.editHabitDescriptionText?.text.toString(),
                 typeHabit = selectedTypeHabit(),
@@ -76,7 +85,8 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
                     .toInt(),
                 priorityHabit = priorityItem,
                 periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString(),
-                colorHabit = selectedColor()
+                colorHabit = selectedColor(),
+                date = System.currentTimeMillis().toInt()
             )
         )
         findNavController().popBackStack()

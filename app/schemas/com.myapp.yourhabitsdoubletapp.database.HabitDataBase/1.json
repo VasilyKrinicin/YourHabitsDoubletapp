@@ -1,0 +1,94 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 1,
+    "identityHash": "db435b6885cd0efd481818783ebb06c1",
+    "entities": [
+      {
+        "tableName": "habit",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `uid` TEXT, `name_habit` TEXT NOT NULL, `description_habit` TEXT NOT NULL, `type_habit` TEXT NOT NULL, `priority_habit` TEXT NOT NULL, `number_executions` INTEGER NOT NULL, `period_text` TEXT NOT NULL, `color_habit` INTEGER NOT NULL, `date` INTEGER NOT NULL, `unloaded` INTEGER NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "id",
+            "columnName": "id",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "uid",
+            "columnName": "uid",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "nameHabit",
+            "columnName": "name_habit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "descriptionHabit",
+            "columnName": "description_habit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "typeHabit",
+            "columnName": "type_habit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "priorityHabit",
+            "columnName": "priority_habit",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numberExecutions",
+            "columnName": "number_executions",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "periodText",
+            "columnName": "period_text",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "colorHabit",
+            "columnName": "color_habit",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "date",
+            "columnName": "date",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "unloaded",
+            "columnName": "unloaded",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "id"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'db435b6885cd0efd481818783ebb06c1')"
+    ]
+  }
+}

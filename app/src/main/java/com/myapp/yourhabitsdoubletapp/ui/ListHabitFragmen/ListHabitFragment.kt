@@ -29,7 +29,7 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         initList()
     }
 
-    override fun onResume(){
+    override fun onResume() {
         val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
         listHabitViewModel.setHabitTypeFilter(typeHabit)
         super.onResume()
@@ -38,9 +38,9 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
     //Инициализируем адаптер списка Habit
     private fun initList() {
         adapterHabit =
-            AdapterHabit (
-                    ::modifyHabit
-                )
+            AdapterHabit(
+                ::modifyHabit
+            )
 
         fragmentMainBinding?.apply {
             with(habitList) {
@@ -52,7 +52,10 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
 
 
     private fun modifyHabit(habit: Habit) {
-        val direction = ViewPagerFragmentDirections.actionViewPagerFragmentToEditHabitFragment(habit.id)
+        val direction = ViewPagerFragmentDirections.actionViewPagerFragmentToEditHabitFragment(
+            id = habit.id,
+            uid = habit.uid ?: null
+        )
         findNavController().navigate(direction)
     }
 
@@ -63,7 +66,7 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
                 adapterHabit?.items = it
             }
         listHabitViewModel.getHabitSortType().observe(viewLifecycleOwner) {
-           listHabitViewModel.getSort()
+            listHabitViewModel.getSort()
         }
         listHabitViewModel.getHabitTypeFilter().observe(viewLifecycleOwner) {
             listHabitViewModel.getSort()
