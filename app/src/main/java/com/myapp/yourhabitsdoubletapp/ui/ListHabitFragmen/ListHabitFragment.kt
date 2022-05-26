@@ -1,45 +1,56 @@
 package com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen
 
+import android.content.Context
 import android.os.Bundle
 import android.view.View
 
 import androidx.fragment.app.*
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.myapp.domain.model.HabitModel
 import com.myapp.yourhabitsdoubletapp.*
 import com.myapp.yourhabitsdoubletapp.Adapters.AdapterHabit
-import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.database.Habit
+import com.myapp.domain.model.TypeHabit
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentListHabitBinding
+import com.myapp.yourhabitsdoubletapp.di.ListHabitComponent
+import com.myapp.yourhabitsdoubletapp.di.components
 import com.myapp.yourhabitsdoubletapp.ui.ViewPagerFragmentDirections
+import javax.inject.Inject
 
 class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
 
     private var fragmentMainBinding: FragmentListHabitBinding? = null
     private var adapterHabit: AdapterHabit? = null
-    private val listHabitViewModel: ListHabitViewModel by activityViewModels()
+    private lateinit var typeHabit: TypeHabit
+    private val listHabitComponent: ListHabitComponent by components {
+        (activity?.application as App).appComponent.listHabitComponent()
+            .create()
+    }
+
+    @Inject
+    lateinit var listHabitViewModel: ListHabitViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        listHabitComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentListHabitBinding.bind(view)
         fragmentMainBinding = binding
-        val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
-        listHabitViewModel.setHabitTypeFilter(typeHabit)
+        typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
         observeViewModelState()
         initList()
-    }
-
-    override fun onResume() {
-        val typeHabit = arguments?.getSerializable(HABIT_STATE) as TypeHabit
-        listHabitViewModel.setHabitTypeFilter(typeHabit)
-        super.onResume()
     }
 
     //Инициализируем адаптер списка Habit
     private fun initList() {
         adapterHabit =
             AdapterHabit(
-                ::modifyHabit
+                ::modifyHabit,
+                ::deleteHabit,
+                ::executeHabit
             )
 
         fragmentMainBinding?.apply {
@@ -50,11 +61,18 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         }
     }
 
+    private fun executeHabit(habit: HabitModel) {
+        listHabitViewModel.executeHabit(habit)
+    }
 
-    private fun modifyHabit(habit: Habit) {
+
+    private fun deleteHabit(habit: HabitModel) {
+        listHabitViewModel.deleteHabit(habit)
+    }
+
+    private fun modifyHabit(habit: HabitModel) {
         val direction = ViewPagerFragmentDirections.actionViewPagerFragmentToEditHabitFragment(
-            id = habit.id,
-            uid = habit.uid ?: null
+            uid = habit.uid
         )
         findNavController().navigate(direction)
     }
@@ -62,15 +80,13 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
 
     private fun observeViewModelState() {
         listHabitViewModel.habitLiveData
-            .observe(viewLifecycleOwner) {
-                adapterHabit?.items = it
+            .observe(viewLifecycleOwner) { list ->
+                adapterHabit?.items = list.filter { it.typeHabit == typeHabit }
             }
         listHabitViewModel.getHabitSortType().observe(viewLifecycleOwner) {
             listHabitViewModel.getSort()
         }
-        listHabitViewModel.getHabitTypeFilter().observe(viewLifecycleOwner) {
-            listHabitViewModel.getSort()
-        }
+
         listHabitViewModel.getHabitTextFilter().observe(viewLifecycleOwner) {
             listHabitViewModel.getSort()
         }

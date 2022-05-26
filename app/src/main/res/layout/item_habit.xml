@@ -10,20 +10,22 @@
 
     <TextView
         android:id="@+id/nameHabit"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/simple_text_name_habit"
         android:textSize="20sp"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toStartOf="@+id/done_button"/>
 
     <TextView
         android:id="@+id/descriptionHabit"
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/simple_text_description_habit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/nameHabit" />
+        app:layout_constraintTop_toBottomOf="@+id/nameHabit"
+        app:layout_constraintEnd_toStartOf="@+id/done_button"/>
 
     <TextView
         android:id="@+id/typeHabit"
@@ -37,10 +39,10 @@
         android:id="@+id/frequencyHabit"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="8dp"
         android:text="@string/simple_textfrequancy_habit"
-        app:layout_constraintStart_toEndOf="@+id/typeHabit"
-        app:layout_constraintTop_toBottomOf="@+id/descriptionHabit" />
+        app:layout_constraintStart_toStartOf="parent"
+
+        app:layout_constraintTop_toBottomOf="@id/typeHabit" />
 
     <TextView
         android:id="@+id/priorityHabit"
@@ -48,9 +50,17 @@
         android:layout_height="wrap_content"
         android:text="@string/simple_text_priority_habit"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/typeHabit"
+        app:layout_constraintTop_toBottomOf="@+id/frequencyHabit"
 
         />
+    <ImageView
+        android:id="@+id/done_button"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        app:srcCompat="@drawable/ic_baseline_check_circle_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

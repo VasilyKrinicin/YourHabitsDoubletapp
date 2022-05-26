@@ -1,21 +1,38 @@
 package com.myapp.yourhabitsdoubletapp.ui
 
+import android.content.Context
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.activityViewModels
-import com.myapp.yourhabitsdoubletapp.Data.SortType
+import com.myapp.domain.model.SortType
+import com.myapp.yourhabitsdoubletapp.App
 import com.myapp.yourhabitsdoubletapp.R
 import com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen.ListHabitViewModel
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentBottomSheetBinding
+import com.myapp.yourhabitsdoubletapp.di.ListHabitComponent
+import com.myapp.yourhabitsdoubletapp.di.components
+import javax.inject.Inject
 
 class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
 
     private var fragmentBottomSheetBinding: FragmentBottomSheetBinding? = null
-    private val listHabitViewModel: ListHabitViewModel by activityViewModels()
+
+    private val listHabitComponent: ListHabitComponent by components {
+        (activity?.application as App).appComponent.listHabitComponent()
+            .create()
+    }
+
+    @Inject
+    lateinit var listHabitViewModel: ListHabitViewModel
+
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        listHabitComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -25,6 +42,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
         filterList()
         binding.spinerSorted.setOnItemClickListener { _, _, _, _ ->
             listHabitViewModel.putSortType(getSortedType())
+            listHabitViewModel.getSort()
         }
     }
 
@@ -39,6 +57,7 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
             override fun afterTextChanged(s: Editable?) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
                 listHabitViewModel.setTextFilter(s.toString())
+                listHabitViewModel.getSort()
             }
         }
         fragmentBottomSheetBinding?.filterNameLayout?.editText?.addTextChangedListener(

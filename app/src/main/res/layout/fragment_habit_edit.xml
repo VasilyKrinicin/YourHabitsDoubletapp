@@ -115,7 +115,7 @@
                 android:layout_height="wrap_content"
 
                 android:defaultFocusHighlightEnabled="true"
-                android:inputType="text" />
+                android:inputType="number" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <TextView

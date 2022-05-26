@@ -4,13 +4,15 @@ package com.myapp.yourhabitsdoubletapp.Adapters
 import androidx.core.graphics.drawable.toDrawable
 import androidx.core.graphics.toColor
 import androidx.recyclerview.widget.RecyclerView
-import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.database.Habit
+import com.myapp.domain.model.HabitModel
+import com.myapp.domain.model.TypeHabit
 import com.myapp.yourhabitsdoubletapp.databinding.ItemHabitBinding
 
 class HabitViewHolder(
     view: ItemHabitBinding,
-    private val onItemClick: ((Habit) -> Unit)?
+    private val onItemClick: ((HabitModel) -> Unit)?,
+    private val deleteHabit: ((HabitModel) -> Unit)?,
+    private val executeHabit: ((HabitModel) -> Unit)?
 ) : RecyclerView.ViewHolder(view.root) {
 
 
@@ -20,8 +22,9 @@ class HabitViewHolder(
     private val descriptionHabitText = view.descriptionHabit
     private val priorityHabitText = view.priorityHabit
     private val frequencyHabitText = view.frequencyHabit
+    private val buttonDone = view.doneButton
 
-    fun bind(habit: Habit) {
+    fun bind(habit: HabitModel) {
         nameHabitText.text = habit.nameHabit
         when (habit.typeHabit) {
             TypeHabit.NEGATIVE -> {
@@ -33,10 +36,17 @@ class HabitViewHolder(
         }
         descriptionHabitText.text = habit.descriptionHabit
         priorityHabitText.text = habit.priorityHabit.str
-        frequencyHabitText.text = habit.numberExecutions.toString() + " " + habit.periodText
+        frequencyHabitText.text = "Количество ${habit.numberExecutions}, период в день ${habit.periodText}"
         itemHabitLayout.background = habit.colorHabit.toColor().toDrawable()
+        buttonDone.setOnClickListener {
+            executeHabit?.invoke(habit)
+        }
         itemHabitLayout.setOnClickListener {
             onItemClick?.invoke(habit)
+        }
+        itemHabitLayout.setOnLongClickListener {
+            deleteHabit?.invoke(habit)
+            true
         }
     }
 }

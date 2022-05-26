@@ -2,11 +2,12 @@ package com.myapp.yourhabitsdoubletapp.ui
 
 import android.os.Bundle
 import android.view.View
+import androidx.core.os.bundleOf
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import com.google.android.material.tabs.TabLayoutMediator
 import com.myapp.yourhabitsdoubletapp.Adapters.TabPagerAdapter
-import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
+import com.myapp.domain.model.TypeHabit
 import com.myapp.yourhabitsdoubletapp.R
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentViewPagerBinding
 

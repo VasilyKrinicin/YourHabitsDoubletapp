@@ -13,8 +13,6 @@ import androidx.navigation.ui.AppBarConfiguration
 import androidx.navigation.ui.setupWithNavController
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.myapp.yourhabitsdoubletapp.Networking.NetworkRepository
-import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.ActivityMainBinding
 import kotlinx.coroutines.*
 
@@ -30,41 +28,14 @@ class MainActivity : AppCompatActivity() {
         connectivityManager.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
     }
 
-    override fun onResume() {
-        super.onResume()
-        connectivityManager = getSystemService(ConnectivityManager::class.java)
-        connectivityManager.registerDefaultNetworkCallback(object :
-            ConnectivityManager.NetworkCallback() {
-            override fun onAvailable(network: Network) {
-                Log.e(TAG, "The default network is now: " + network)
-                NetworkRepository.synchronizeHabit()
-            }
-
-            override fun onLost(network: Network) {
-                Log.e(
-                    TAG,
-                    "The application no longer has a default network. The last default network was " + network
-                )
-                Toast.makeText(
-                    applicationContext,
-                    "Соединение с сетью потеряно, данные будут записаны локально.",
-                    Toast.LENGTH_LONG
-                ).show()
-            }
-        })
-    }
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        HabitRepository.getDatabase(this)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
         val host =
             supportFragmentManager.findFragmentById(R.id.fragment) as NavHostFragment? ?: return
         navController = host.navController
-
         binding.navView.setupWithNavController(navController)
-
         appBarConfiguration = AppBarConfiguration(navController.graph, binding.drawerLayout)
         setSupportActionBar(binding.toolbar)
         binding.toolbar.setupWithNavController(navController, appBarConfiguration)

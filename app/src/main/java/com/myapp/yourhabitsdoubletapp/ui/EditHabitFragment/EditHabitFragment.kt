@@ -1,12 +1,11 @@
 package com.myapp.yourhabitsdoubletapp.ui.EditHabitFragment
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
 import android.graphics.drawable.GradientDrawable
-import android.icu.util.Calendar
 import android.os.Bundle
-import android.os.SystemClock
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -20,35 +19,48 @@ import androidx.core.view.isVisible
 import androidx.core.view.marginLeft
 import androidx.core.view.marginRight
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
-import com.myapp.yourhabitsdoubletapp.Data.PriorityHabit
-import com.myapp.yourhabitsdoubletapp.Data.TypeHabit
-import com.myapp.yourhabitsdoubletapp.database.Habit
+import com.myapp.domain.model.HabitModel
+import com.myapp.domain.model.PriorityHabit
+import com.myapp.domain.model.TypeHabit
+import com.myapp.yourhabitsdoubletapp.App
 import com.myapp.yourhabitsdoubletapp.R
-import com.myapp.yourhabitsdoubletapp.database.HabitRepository
 import com.myapp.yourhabitsdoubletapp.databinding.FragmentHabitEditBinding
-import org.threeten.bp.Instant
-import org.threeten.bp.LocalDateTime
-import java.util.*
+import com.myapp.yourhabitsdoubletapp.di.EditHabitComponent
+import com.myapp.yourhabitsdoubletapp.di.components
+import javax.inject.Inject
 
 class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
+
     private val args: EditHabitFragmentArgs by navArgs()
-    private val editHabitViewModel: EditHabitViewModel by viewModels()
     private var fragmentHabitEditBinding: FragmentHabitEditBinding? = null
     private var priorityItem = PriorityHabit.LOW
-    private var editHabit: Habit? = null
-    private var selectedInstant: Instant? = null
+    private var habitId: String = CUSTOM_UID
+    private val editHabitComponent: EditHabitComponent by components {
+        (activity?.application as App).appComponent.editHabitComponent()
+            .create(habitId)
+    }
 
+    @Inject
+    lateinit var editHabitViewModel: EditHabitViewModel
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+        habitId = if (args.uid == "") {
+            CUSTOM_UID
+        } else {
+            args.uid ?: CUSTOM_UID
+        }
+
+        editHabitComponent.inject(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         val binding = FragmentHabitEditBinding.bind(view)
         fragmentHabitEditBinding = binding
         bindViewModel()
-        if (args.id != 0L) {
-            editHabitViewModel.init(args.id)
+        if (args.uid != CUSTOM_UID) {
             binding.apply {
                 addHabitButton.text = resources.getString(R.string.edit_button_text)
                 helloTextView.text = resources.getString(R.string.edit_new_habit_text)
@@ -75,18 +87,18 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
     //Создание новго элемента Habit из заполненых данных
     private fun newHabit() {
         editHabitViewModel.fieldProcess(
-            Habit(
-                id = args.id,
-                uid = args.uid,
+            HabitModel(
+                uid = args.uid ?: CUSTOM_UID,
                 nameHabit = fragmentHabitEditBinding?.editHabitNameText?.text.toString(),
                 descriptionHabit = fragmentHabitEditBinding?.editHabitDescriptionText?.text.toString(),
                 typeHabit = selectedTypeHabit(),
+                priorityHabit = priorityItem,
                 numberExecutions = fragmentHabitEditBinding?.editHabitNumberExecutionsText?.text.toString()
                     .toInt(),
-                priorityHabit = priorityItem,
-                periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString(),
+                periodText = fragmentHabitEditBinding?.editHabitPeriodText?.text.toString().toInt(),
                 colorHabit = selectedColor(),
-                date = System.currentTimeMillis().toInt()
+                date = System.currentTimeMillis().toInt(),
+                doneDate = ArrayList()
             )
         )
         findNavController().popBackStack()
@@ -160,7 +172,7 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
 
 
     //Функция запонения полей для редактирования привычки
-    private fun editHabitFun(habit: Habit) {
+    private fun editHabitFun(habit: HabitModel) {
         fragmentHabitEditBinding?.apply {
             addHabitButton.isEnabled = true
             selectedColor.isVisible = true
@@ -169,7 +181,7 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
             spinerPriority.setText(habit.priorityHabit.str)
             selectedColor.background = habit.colorHabit.toColor().toDrawable()
             editHabitNumberExecutionsText.setText(habit.numberExecutions.toString())
-            editHabitPeriodText.setText(habit.periodText)
+            editHabitPeriodText.setText(habit.periodText.toString())
             if (habit.typeHabit == TypeHabit.POSITIVE) {
                 radioPositiveHabit.isChecked = true
             } else {
@@ -285,7 +297,7 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
 
     companion object {
         private const val COLOR = "color"
-        private const val EDIT_HABIT = "edit_habit"
+        private const val CUSTOM_UID = "no_uid"
         private const val RGB = "rgb_text"
         private const val HSV = "hsv_text"
     }
