@@ -1,17 +1,18 @@
 package com.myapp.domain.usecase
 
 import com.myapp.domain.model.HabitModel
-import com.myapp.domain.repository.RepositoryHabit
+import com.myapp.domain.repository.HabitRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.withContext
 
-class UpdateHabit(
-    private val repositoryHabit: RepositoryHabit,
+class AddHabitUseCase(
+    private val habitRepository: HabitRepository,
     private val dispatcher: CoroutineDispatcher
 ) {
+
     suspend fun execute(habitModel: HabitModel) {
         withContext(dispatcher) {
-            repositoryHabit.editHabit(habitModel)
+            habitRepository.addHabit(habitModel)
         }
     }
 }

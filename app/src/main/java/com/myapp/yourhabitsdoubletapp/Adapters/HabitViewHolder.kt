@@ -23,6 +23,7 @@ class HabitViewHolder(
     private val priorityHabitText = view.priorityHabit
     private val frequencyHabitText = view.frequencyHabit
     private val buttonDone = view.doneButton
+    private val countExecuteTextView=view.countExecute
 
     fun bind(habit: HabitModel) {
         nameHabitText.text = habit.nameHabit
@@ -34,6 +35,7 @@ class HabitViewHolder(
                 typeHabitText.text = "Хорошая привычка"
             }
         }
+        countExecuteTextView.text= "Текущее количество выполнений ${habit.doneDate.size}"
         descriptionHabitText.text = habit.descriptionHabit
         priorityHabitText.text = habit.priorityHabit.str
         frequencyHabitText.text = "Количество ${habit.numberExecutions}, период в день ${habit.periodText}"

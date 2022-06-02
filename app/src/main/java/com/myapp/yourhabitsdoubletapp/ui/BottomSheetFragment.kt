@@ -30,7 +30,6 @@ class BottomSheetFragment() : Fragment(R.layout.fragment_bottom_sheet) {
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
         listHabitComponent.inject(this)
     }
 

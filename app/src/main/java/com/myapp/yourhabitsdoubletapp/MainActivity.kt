@@ -21,12 +21,6 @@ class MainActivity : AppCompatActivity() {
     private lateinit var appBarConfiguration: AppBarConfiguration
     private lateinit var navController: NavController
     private val job = SupervisorJob()
-    private lateinit var connectivityManager: ConnectivityManager
-
-    override fun onPause() {
-        super.onPause()
-        connectivityManager.unregisterNetworkCallback(ConnectivityManager.NetworkCallback())
-    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)

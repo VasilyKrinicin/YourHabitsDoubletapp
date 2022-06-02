@@ -3,6 +3,7 @@ package com.myapp.yourhabitsdoubletapp.ui.ListHabitFragmen
 import android.content.Context
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 
 import androidx.fragment.app.*
 import androidx.navigation.fragment.findNavController
@@ -15,6 +16,7 @@ import com.myapp.yourhabitsdoubletapp.databinding.FragmentListHabitBinding
 import com.myapp.yourhabitsdoubletapp.di.ListHabitComponent
 import com.myapp.yourhabitsdoubletapp.di.components
 import com.myapp.yourhabitsdoubletapp.ui.ViewPagerFragmentDirections
+import kotlinx.coroutines.*
 import javax.inject.Inject
 
 class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
@@ -22,6 +24,7 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
     private var fragmentMainBinding: FragmentListHabitBinding? = null
     private var adapterHabit: AdapterHabit? = null
     private lateinit var typeHabit: TypeHabit
+    private lateinit var text:String
     private val listHabitComponent: ListHabitComponent by components {
         (activity?.application as App).appComponent.listHabitComponent()
             .create()
@@ -61,8 +64,12 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         }
     }
 
+    @OptIn(DelicateCoroutinesApi::class)
     private fun executeHabit(habit: HabitModel) {
-        listHabitViewModel.executeHabit(habit)
+        GlobalScope.launch  (Dispatchers.IO) {
+            listHabitViewModel.executeHabit(habit)
+        }
+
     }
 
 
@@ -90,6 +97,10 @@ class ListHabitFragment() : Fragment(R.layout.fragment_list_habit) {
         listHabitViewModel.getHabitTextFilter().observe(viewLifecycleOwner) {
             listHabitViewModel.getSort()
         }
+        listHabitViewModel.textMassageLiveData
+            .observe(viewLifecycleOwner) {
+                Toast.makeText(context, it, Toast.LENGTH_SHORT).show()
+            }
 
 
     }

@@ -42,7 +42,7 @@
             android:hint="@string/enter_description_habit_edit">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/edit_habit_description_text"
+                android:id="@+id/editHabitDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textMultiLine" />

@@ -52,10 +52,8 @@ class Converters {
 
     @TypeConverter
     fun toList(data: String): List<Int?>? {
-        val number = Regex("0-9").findAll(data)
-            .map(MatchResult::value)
-            .toList()
-        return number.map { it.toInt() }
-
+       return data.split(", ")
+            .filter { it.isNotEmpty() }
+            .map { it.toInt() }
     }
 }

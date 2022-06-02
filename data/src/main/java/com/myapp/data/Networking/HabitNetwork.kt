@@ -7,8 +7,7 @@ import com.myapp.domain.model.TypeHabit
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass
 
-@JsonClass(generateAdapter = true)
-class UID(@Json(name = "uid") val uid: String)
+
 
 @JsonClass(generateAdapter = true)
 class HabitNetwork(
@@ -16,7 +15,7 @@ class HabitNetwork(
     val count: Int,
     val description: String,
     val date: Int,
-    @Json(name = "done_dates") val doneDates: List<Int>,
+    @Json(name = "done_dates") val doneDates: MutableList<Int>,
     val frequency: Int,
     val priority: Int,
     val title: String,
@@ -45,7 +44,7 @@ class HabitNetwork(
             periodText = frequency,
             colorHabit = color,
             date = date,
-            doneDate = doneDates.toMutableList() ?: ArrayList()
+            doneDate = doneDates ?: mutableListOf<Int>()
         )
     }
 }

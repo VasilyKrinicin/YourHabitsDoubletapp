@@ -3,7 +3,7 @@ package com.myapp.data.database
 import com.myapp.data.convert.ConvertModel
 import com.myapp.domain.model.HabitModel
 import com.myapp.domain.model.SortType
-import com.myapp.domain.repository.RepositoryHabit
+import com.myapp.domain.repository.HabitRepository
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -11,7 +11,7 @@ import kotlin.coroutines.CoroutineContext
 
 class HabitRepositoryImpl(
     private val habitDao: HabitDao
-) : CoroutineScope, RepositoryHabit {
+) : CoroutineScope, HabitRepository {
     private val job = SupervisorJob()
 
     override val coroutineContext: CoroutineContext
@@ -42,7 +42,7 @@ class HabitRepositoryImpl(
         }
     }
 
-    override fun getHabitByUID(uid: String): Flow<HabitModel> =
+    override fun getHabitByUID(uid: String): Flow<HabitModel?> =
         habitDao.getHabitByUID(uid).map { ConvertModel.convertHabitToHabitModel(it)
     }
 

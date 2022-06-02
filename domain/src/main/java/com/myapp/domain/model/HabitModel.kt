@@ -11,7 +11,7 @@ class HabitModel(
     val periodText: Int,
     val colorHabit: Int,
     val date: Int,
-    val doneDate: MutableList<Int>,
+    var doneDate: MutableList<Int>,
     var unloaded: Boolean = false
 )
 

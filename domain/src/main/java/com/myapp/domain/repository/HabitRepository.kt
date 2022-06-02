@@ -4,7 +4,7 @@ import com.myapp.domain.model.HabitModel
 import com.myapp.domain.model.SortType
 import kotlinx.coroutines.flow.Flow
 
-interface RepositoryHabit {
+interface HabitRepository {
 
     fun getAll(): Flow<List<HabitModel>>
 
@@ -13,7 +13,7 @@ interface RepositoryHabit {
         text: String?
     ): Flow<List<HabitModel>>
 
-    fun getHabitByUID(uid: String): Flow<HabitModel>
+    fun getHabitByUID(uid: String): Flow<HabitModel?>
 
     suspend fun addHabit(habit: HabitModel)
 

@@ -2,11 +2,10 @@ package com.myapp.yourhabitsdoubletapp.ui.EditHabitFragment
 
 import android.util.Log
 import androidx.lifecycle.*
-import com.myapp.data.RepositoryNetwork
+import com.myapp.data.NetworkRepositoryImp
 import com.myapp.domain.model.HabitModel
 import com.myapp.domain.usecase.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.GlobalScope.coroutineContext
 import java.lang.Exception
 import javax.inject.Inject
 import kotlin.coroutines.CoroutineContext
@@ -14,10 +13,8 @@ import kotlin.coroutines.CoroutineContext
 private const val CUSTOM_UID = "no_uid"
 
 class EditHabitViewModel @Inject constructor(
-    private val addHabit: AddHabit,
-    private val updateHabit: UpdateHabit,
-    private val getHabitByUid: GetHabitByUid,
-    private val repositoryNetwork: RepositoryNetwork,
+    private val getHabitByUidUseCase: GetHabitByUidUseCase,
+    private val addOrUpdateUseCase:AddOrUpdateUseCase,
     private val habitId: String
 ) : ViewModel(),
     CoroutineScope {
@@ -31,7 +28,7 @@ class EditHabitViewModel @Inject constructor(
 
     val getHabitLiveData: LiveData<HabitModel> =
         Transformations.switchMap(mutableIdLiveData) {
-            getHabitByUid.execute(it).asLiveData()
+            getHabitByUidUseCase.execute(it)?.asLiveData()
         }
 
     init {
@@ -48,30 +45,7 @@ class EditHabitViewModel @Inject constructor(
 
     fun fieldProcess(newHabit: HabitModel) {
         launch {
-            if (newHabit.uid == CUSTOM_UID) {
-                try {
-                    newHabit.uid = repositoryNetwork.putHabit(newHabit)
-                    newHabit.unloaded = true
-
-                } catch (e: Exception) {
-                    Log.e("Error TryCatch", "Error add habit", e)
-                    newHabit.uid = CUSTOM_UID
-                    newHabit.unloaded = false
-                } finally {
-                    addHabit.execute(newHabit)
-                }
-            } else {
-                try {
-                    newHabit.uid = repositoryNetwork.putHabit(newHabit)
-                    newHabit.unloaded = true
-                } catch (e: Exception) {
-                    Log.e("Error TryCatch", "Error update habit", e)
-                    newHabit.uid = CUSTOM_UID
-                    newHabit.unloaded = false
-                } finally {
-                    updateHabit.execute(newHabit)
-                }
-            }
+            addOrUpdateUseCase.execute(newHabit, CUSTOM_UID)
         }
     }
 }

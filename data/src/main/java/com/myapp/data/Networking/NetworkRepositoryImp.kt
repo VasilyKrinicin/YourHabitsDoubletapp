@@ -2,55 +2,53 @@ package com.myapp.data
 
 import android.util.Log
 import com.myapp.data.Networking.NetworkApi
-import com.myapp.data.Networking.UID
 import com.myapp.data.convert.ConvertModel
-import com.myapp.data.Networking.HabitDone
+import com.myapp.domain.model.HabitDoneModel
 import com.myapp.domain.model.HabitModel
-import com.myapp.domain.repository.RepositoryHabit
+import com.myapp.domain.model.UidModel
+import com.myapp.domain.repository.NetworkRepository
+import com.myapp.domain.repository.HabitRepository
 import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
 import java.lang.Exception
 import kotlin.coroutines.CoroutineContext
 
-class RepositoryNetwork(
-    private val repositoryHabit: RepositoryHabit,
+class NetworkRepositoryImp(
+    private val habitRepository: HabitRepository,
     private val networkApi: NetworkApi
-) : CoroutineScope {
+) : CoroutineScope, NetworkRepository {
 
     private val job = SupervisorJob()
 
     override val coroutineContext: CoroutineContext
         get() = Dispatchers.IO + job
 
-    fun synchronizeHabit() {
-        loadToServer()
-        loadToDb()
+    override fun synchronizeHabit() {
+     //   loadToServer()
+     //   loadToDb()
     }
 
-    suspend fun putHabit(newHabit: HabitModel): String = coroutineScope {
-        withContext(Dispatchers.IO) {
-            networkApi.putHabit(
-                ConvertModel.convertHabitModelToHabit(
-                    newHabit
-                ).toHabitNetwork()
-            ).single().uid
-        }
-    }
+    override suspend fun putHabit(newHabit: HabitModel): String =
+        networkApi.putHabit(
+            ConvertModel.convertHabitModelToHabit(
+                newHabit
+            ).toHabitNetwork()
+        ).execute().body()!!.uid
 
-    suspend fun deleteHabitNetwork(uid: UID) = coroutineScope {
+
+    override suspend fun deleteHabitNetwork(uidModel: UidModel): Unit = coroutineScope {
         withContext(Dispatchers.IO) {
             try {
-                networkApi.deleteHabit(uid)
+                networkApi.deleteHabit(uidModel)
             } catch (e: Exception) {
                 Log.e("Error TryCatch", "Error Delete", e)
             }
         }
     }
 
-    suspend fun postHabit(done: HabitDone) {
+    override suspend fun postHabit(doneModel: HabitDoneModel) {
         withContext(Dispatchers.IO) {
             try {
-                networkApi.postHabit(done)
+                networkApi.postHabit(doneModel)
             } catch (e: Exception) {
                 Log.e("Error TryCatch", "Error POST", e)
             }
@@ -58,41 +56,44 @@ class RepositoryNetwork(
 
     }
 
-    fun loadToServer() {
+    override fun loadToServer() {
         launch(Dispatchers.IO) {
-            val listHabit = repositoryHabit.getAll()
-            listHabit.map {
-                it.filter { it.unloaded }
-                    .forEach { habit ->
+            val listHabitFlow = habitRepository.getAll()
+            listHabitFlow.collect { listHabit ->
+                listHabit.forEach { habit ->
+                    val habitOld = habit
+                    if (!habit.unloaded) {
                         try {
+                            habit.uid = ""
                             habit.uid = networkApi.putHabit(
                                 ConvertModel.convertHabitModelToHabit(habit).toHabitNetwork()
-                            ).single().uid
-                            habit.unloaded = true
-                            repositoryHabit.editHabit(habit)
+                            ).execute().body()!!.uid
                         } catch (e: Exception) {
+                            habit.uid = habitOld.uid
+                            habit.unloaded = false
                             Log.e("Error TryCatch", "Error loadToServer", e)
 
+                        } finally {
+                            habitRepository.deleteHabit(habitOld)
+                            habitRepository.editHabit(habit)
                         }
                     }
+                }
             }
         }
     }
 
-    private fun loadToDb() {
+    override fun loadToDb() {
         launch(Dispatchers.IO) {
             try {
                 val listNetworkHabit = networkApi.getAllHabit()
                 listNetworkHabit.forEach { habitNetwork ->
                     val newHabit = habitNetwork.toHabit()
-                    newHabit.uid = habitNetwork.uid
                     newHabit.unloaded = true
-                    repositoryHabit.addHabit(ConvertModel.convertHabitToHabitModel(newHabit))
+                    habitRepository.addHabit(ConvertModel.convertHabitToHabitModel(newHabit))
                 }
-
             } catch (e: Exception) {
                 Log.e("Error TryCatch", "Error loadToDb", e)
-
             }
         }
     }

@@ -51,7 +51,6 @@ class EditHabitFragment() : Fragment(R.layout.fragment_habit_edit) {
         } else {
             args.uid ?: CUSTOM_UID
         }
-
         editHabitComponent.inject(this)
     }
 

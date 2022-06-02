@@ -31,7 +31,6 @@ data class Habit(
     val date: Int,
     @ColumnInfo(name = HabitContract.Columns.DONE_DATE)
     var doneDate:MutableList<Int>,
-
     @ColumnInfo(name = HabitContract.Columns.UNLOADED)
     var unloaded: Boolean = false
 ) {
